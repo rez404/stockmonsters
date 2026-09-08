@@ -1,8 +1,15 @@
-import creaturesRaw from "@/data/creatures.json";
-import memesRaw from "@/data/memes.json";
-import typesRaw from "@/data/types.json";
+import creaturesRaw from '@/data/creatures.json';
+import memesRaw from '@/data/memes.json';
+import typesRaw from '@/data/types.json';
 
-export type Stats = { hp: number; atk: number; def: number; spa: number; spd: number; spe: number };
+export type Stats = {
+  hp: number;
+  atk: number;
+  def: number;
+  spa: number;
+  spd: number;
+  spe: number;
+};
 
 export type Creature = {
   id: number;
@@ -52,41 +59,40 @@ export const CREATURES: Creature[] = creaturesRaw;
 export const MEMES: Meme[] = memesRaw;
 export const TYPES: ElementType[] = typesRaw;
 
-export const TYPE_BY_NAME = Object.fromEntries(TYPES.map((t) => [t.name, t])) as Record<
-  string,
-  ElementType
->;
+export const TYPE_BY_NAME = Object.fromEntries(
+  TYPES.map((t) => [t.name, t]),
+) as Record<string, ElementType>;
 
 export const CREATURE_BY_TICKER = Object.fromEntries(
-  CREATURES.map((c) => [c.ticker, c])
+  CREATURES.map((c) => [c.ticker, c]),
 ) as Record<string, Creature>;
 
 /** The game's own starter slots: dex 1 / 4 / 7 landed on Apple, NVIDIA, Tesla. */
-export const STARTER_TICKERS = ["AAPL", "NVDA", "TSLA"] as const;
+export const STARTER_TICKERS = ['AAPL', 'NVDA', 'TSLA'] as const;
 
 export const STAT_LABELS: Array<[keyof Stats, string, string]> = [
-  ["hp", "HP", "Float"],
-  ["atk", "ATK", "Buy pressure"],
-  ["def", "DEF", "Support"],
-  ["spa", "SP.ATK", "Narrative"],
-  ["spd", "SP.DEF", "Conviction"],
-  ["spe", "SPD", "Fill speed"],
+  ['hp', 'HP', 'Float'],
+  ['atk', 'ATK', 'Buy pressure'],
+  ['def', 'DEF', 'Support'],
+  ['spa', 'SP.ATK', 'Narrative'],
+  ['spd', 'SP.DEF', 'Conviction'],
+  ['spe', 'SPD', 'Fill speed'],
 ];
 
 /**
  * Power tier, bucketed from the real base-stat total that ships in
  * Data/Studio/pokemon/*.json. Not invented — just renamed for the theme.
  */
-export type Tier = "Small Cap" | "Mid Cap" | "Blue Chip";
+export type Tier = 'Small Cap' | 'Mid Cap' | 'Blue Chip';
 
 export function tierOf(bst: number | null): Tier {
-  if (bst === null) return "Small Cap";
-  if (bst >= 460) return "Blue Chip";
-  if (bst >= 320) return "Mid Cap";
-  return "Small Cap";
+  if (bst === null) return 'Small Cap';
+  if (bst >= 460) return 'Blue Chip';
+  if (bst >= 320) return 'Mid Cap';
+  return 'Small Cap';
 }
 
-export const TIERS: Tier[] = ["Small Cap", "Mid Cap", "Blue Chip"];
+export const TIERS: Tier[] = ['Small Cap', 'Mid Cap', 'Blue Chip'];
 
 /** Defensive multiplier a creature with `defTypes` takes from `attacker`. */
 export function effectiveness(attacker: string, defTypes: string[]): number {
@@ -94,7 +100,10 @@ export function effectiveness(attacker: string, defTypes: string[]): number {
   return defTypes.reduce((m, d) => m * (chart[d] ?? 1), 1);
 }
 
-export type Matchups = { weak: Array<[string, number]>; resist: Array<[string, number]> };
+export type Matchups = {
+  weak: Array<[string, number]>;
+  resist: Array<[string, number]>;
+};
 
 /** Full defensive profile for one creature, computed off the shipped chart. */
 export function matchups(defTypes: string[]): Matchups {
@@ -110,7 +119,7 @@ export function matchups(defTypes: string[]): Matchups {
   return { weak, resist };
 }
 
-export function spriteUrl(id: number, kind: "mon" | "meme" = "mon") {
+export function spriteUrl(id: number, kind: 'mon' | 'meme' = 'mon') {
   return `/${kind}/${id}.png`;
 }
 
@@ -123,9 +132,9 @@ export function shortAddress(a: string) {
  * has never resolved — the game is live on the box that already had a
  * certificate. Change it here and every button follows.
  */
-export const PLAY_URL = "https://game.stockmonsters.xyz/";
+export const PLAY_URL = 'https://game.stockmonsters.xyz/';
 
-export const TWITTER_URL = "https://x.com/stonksters";
+export const TWITTER_URL = 'https://x.com/stonksters';
 
 /**
  * The economy, in one place, so the copy on the site cannot drift from the
@@ -149,7 +158,7 @@ export const TWITTER_URL = "https://x.com/stonksters";
  */
 export const ECONOMY = {
   /** Live. The token and the game's contracts are both on Robinhood Chain. */
-  network: "Robinhood Chain",
+  network: 'Robinhood Chain',
   /**
    * THE ONLY PLACE THE TICKER IS WRITTEN. Every rendered mention of it on the
    * site reads this value — hero pill, play-to-earn cards, FAQ — so the
@@ -160,9 +169,9 @@ export const ECONOMY = {
    * and the trailing S. Whatever the relaunch deploys, put the exact
    * `symbol()` string here and nothing else.
    */
-  symbol: "STONKSTERS",
+  symbol: 'STONKSTERS',
   /** The token's full name, as the launchpad deploys it. */
-  name: "Stock Monsters",
+  name: 'Stock Monsters',
   /**
    * THE ONE LINE THAT FLIPS THE SITE BETWEEN "LAUNCHED" AND NOT.
    *
@@ -178,11 +187,11 @@ export const ECONOMY = {
    * Typed `as string` on purpose — without it the literal would narrow and
    * TypeScript would treat the NOT DEPLOYED branch as dead code.
    */
-  address: "0x01B4eCB3255D5eB29b4427CA149e860b5fd7472B" as string,
+  address: '0x0000000' as string,
   /** Where it launches. The chain id is 4663. */
-  chain: "Robinhood Chain",
+  chain: 'Robinhood Chain',
   chainId: 4663,
-  supply: "1,000,000,000",
+  supply: '1,000,000,000',
   /** Trading tax, buy and sell. Wallet-to-wallet is free. */
   taxPercent: 2,
   /**
@@ -208,11 +217,11 @@ export const ECONOMY = {
   /** Daily quests on the board. */
   questCount: 5,
   /** What the daily board is worth, in dollars, at target pricing. */
-  questBoardUsd: "$7",
+  questBoardUsd: '$7',
   /** Sealed loot boxes, cheapest to dearest, at target pricing. */
-  boxUsd: ["$30", "$90", "$240"],
+  boxUsd: ['$30', '$90', '$240'],
   /** The launch valuation every in-game dollar figure is priced from. */
-  launchMarketCap: "$200k",
+  launchMarketCap: '$200k',
 } as const;
 
 /**
@@ -221,5 +230,5 @@ export const ECONOMY = {
  * `ECONOMY.address`, so it can never point at a different token than the pill
  * does, and it is only ever rendered when that address is non-empty.
  */
-export const EXPLORER_URL = "https://robinhoodchain.blockscout.com";
+export const EXPLORER_URL = 'https://robinhoodchain.blockscout.com';
 export const TOKEN_EXPLORER_URL = `${EXPLORER_URL}/address/${ECONOMY.address}`;
